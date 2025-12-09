@@ -1,364 +1,344 @@
-# WhatsApp Baileys
+WhatsApp Baileys
 
 <p align="center">
-  <img src="https://files.catbox.moe/369pux.jpg" alt="Thumbnail" />
+  <img src="https://files.catbox.moe/369pux.jpg" alt="Thumbnail" width="400" />
 </p>
 
-WhatsApp Baileys is an open-source library designed to help developers build automation solutions and integrations with WhatsApp efficiently and directly. Using websocket technology without the need for a browser, this library supports a wide range of features such as message management, chat handling, group administration, as well as interactive messages and action buttons for a more dynamic user experience.
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=22C55E&center=true&vCenter=true&width=435&lines=Lightweight+%E2%9A%A1%EF%B8%8F;No+Browser+Required+%F0%9F%9A%80;Full+Features+%F0%9F%94%A5;Multi-Device+Ready+%F0%9F%93%B1" alt="Typing Animation" />
+</p>
 
-Actively developed and maintained, baileys continuously receives updates to enhance stability and performance. One of the main focuses is to improve the pairing and authentication processes to be more stable and secure. Pairing features can be customized with your own codes, making the process more reliable and less prone to interruptions.
+<div align="center">
 
-This library is highly suitable for building business bots, chat automation systems, customer service solutions, and various other communication automation applications that require high stability and comprehensive features. With a lightweight and modular design, baileys is easy to integrate into different systems and platforms.
+https://img.shields.io/github/stars/WhiskeySockets/Baileys?style=for-the-badge&color=yellow
+https://img.shields.io/npm/dm/@whiskeysockets/baileys?style=for-the-badge&color=blue
+https://img.shields.io/github/issues/WhiskeySockets/Baileys?style=for-the-badge
+https://img.shields.io/badge/TypeScript-Ready-3178C6?style=for-the-badge
 
----
+</div>
 
-### Main Features and Advantages
+WhatsApp Baileys adalah library open-source yang dirancang untuk membantu developer membangun solusi otomatisasi dan integrasi dengan WhatsApp secara efisien dan langsung. Menggunakan teknologi websocket tanpa memerlukan browser, library ini mendukung berbagai fitur seperti manajemen pesan, penanganan chat, administrasi grup, serta pesan interaktif dan tombol aksi untuk pengalaman pengguna yang lebih dinamis.
 
-- Supports automatic and custom pairing processes
-- Fixes previous pairing issues that often caused failures or disconnections
-- Supports interactive messages, action buttons, and dynamic menus
-- Efficient automatic session management for reliable operation
-- Compatible with the latest multi-device features from WhatsApp
-- Lightweight, stable, and easy to integrate into various systems
-- Suitable for developing bots, automation, and complete communication solutions
-- Comprehensive documentation and example codes to facilitate development
+Dikembangkan dan dipelihara secara aktif, baileys terus menerima pembaruan untuk meningkatkan stabilitas dan performa. Salah satu fokus utama adalah meningkatkan proses pairing dan autentikasi agar lebih stabil dan aman. Fitur pairing dapat disesuaikan dengan kode Anda sendiri, membuat proses lebih andal dan kurang rentan terhadap gangguan.
 
----
-
-## Getting Started
-
-Begin by installing the library via your preferred package manager, then follow the provided configuration guide. You can also utilize the ready-made example codes to understand how the features work. Use session storage and interactive messaging features to build complete, stable solutions tailored to your business or project needs.
+Library ini sangat cocok untuk membangun bot bisnis, sistem otomatisasi chat, solusi layanan pelanggan, dan berbagai aplikasi otomatisasi komunikasi lainnya yang membutuhkan stabilitas tinggi dan fitur komprehensif. Dengan desain yang ringan dan modular, baileys mudah diintegrasikan ke berbagai sistem dan platform.
 
 ---
 
-## SendMessage Documentation
+👨‍💻 Tentang Saya
 
-### Album Message (Multiple Images)
-Send multiple images in a single album message:
+Halo! Saya depannn 👋
+
+· 📍 Developer WhatsApp Baileys
+· 📱 Telegram: @depanncapee
+· 💻 Fokus: WhatsApp API, Bot Development, Automation
+· 🚀 Motto: "Build fast, scale faster"
+· 🗿 Vibes: console.log('Hello World 🗿')
+
+✨ Fitur Utama & Keunggulan
+
+<div align="center">
+
+Fitur Status Keterangan
+📱 Pairing Custom ✅ Stabil Proses pairing yang dapat disesuaikan
+🔄 Multi-Device ✅ Full Support Kompatibel dengan fitur WhatsApp terbaru
+🎨 Pesan Interaktif ✅ Lengkap Tombol, menu, album, polling
+💾 Session Management ✅ Otomatis Penyimpanan sesi yang efisien
+📊 Poll & Event ✅ Tersedia Polling dan undangan acara
+💰 Payment Request ✅ Support Permintaan pembayaran
+🛍️ Product Catalog ✅ Ready Katalog produk lengkap
+🚀 WebSocket ✅ No Browser Ringan tanpa browser
+
+</div>
+
+🚀 Memulai
+
+Instalasi
+
+```bash
+# Menggunakan npm
+npm install @whiskeysockets/baileys
+
+# Menggunakan yarn
+yarn add @whiskeysockets/baileys
+
+# Menggunakan pnpm
+pnpm add @whiskeysockets/baileys
+```
+
+Kode Contoh Dasar
+
+```javascript
+const makeWASocket = require('@whiskeysockets/baileys').default;
+const { useSingleFileAuthState } = require('@whiskeysockets/baileys');
+
+const { state, saveState } = useSingleFileAuthState('./auth_info.json');
+
+const sock = makeWASocket({
+  auth: state,
+  printQRInTerminal: true
+});
+
+sock.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect } = update;
+  if (connection === 'close') {
+    const shouldReconnect = lastDisconnect.error?.output?.statusCode !== 401;
+    if (shouldReconnect) {
+      // Reconnect logic here
+    }
+  } else if (connection === 'open') {
+    console.log('✅ Terhubung ke WhatsApp!');
+  }
+});
+
+sock.ev.on('messages.upsert', async (m) => {
+  const msg = m.messages[0];
+  if (!msg.key.fromMe && m.type === 'notify') {
+    await sock.sendMessage(msg.key.remoteJid, { 
+      text: "Halo! Saya bot dari depannn 🗿" 
+    });
+  }
+});
+```
+
+📚 Dokumentasi SendMessage
+
+1. 🖼️ Album Message (Multiple Images)
 
 ```javascript
 await sock.sendMessage(jid, { 
     albumMessage: [
-        { image: cihuy, caption: "Foto pertama" },
-        { image: { url: "URL IMAGE" }, caption: "Foto kedua" }
+        { image: buffer1, caption: "Foto pertama" },
+        { image: { url: "https://example.com/image.jpg" }, caption: "Foto kedua" }
     ] 
 }, { quoted: m });
 ```
 
-### Event Message
-Create and send WhatsApp event invitations:
+2. 📅 Event Message
 
 ```javascript
 await sock.sendMessage(jid, { 
     eventMessage: { 
-        isCanceled: false, 
-        name: "Hello World", 
-        description: "yume native", 
-        location: { 
-            degreesLatitude: 0, 
-            degreesLongitude: 0, 
-            name: "rowrrrr" 
-        }, 
-        joinLink: "https://call.whatsapp.com/video/yumevtc", 
+        name: "Meetup Developer", 
+        description: "Diskusi tentang Baileys", 
+        location: { name: "Virtual Meeting" }, 
         startTime: "1763019000", 
-        endTime: "1763026200", 
-        extraGuestsAllowed: false 
+        endTime: "1763026200" 
     } 
-}, { quoted: m });
+});
 ```
 
-### Poll Result Message
-Display poll results with vote counts:
+3. 📊 Poll Result Message
 
 ```javascript
 await sock.sendMessage(jid, { 
     pollResultMessage: { 
-        name: "Hello World", 
+        name: "Poll Favorite Language", 
         pollVotes: [
-            {
-                optionName: "TEST 1",
-                optionVoteCount: "112233"
-            },
-            {
-                optionName: "TEST 2",
-                optionVoteCount: "1"
-            }
+            { optionName: "JavaScript", optionVoteCount: "75" },
+            { optionName: "Python", optionVoteCount: "25" }
         ] 
     } 
-}, { quoted: m });
+});
 ```
 
-### Simple Interactive Message
-Send basic interactive messages with copy button functionality:
+4. 🎯 Interactive Message (Simple)
 
 ```javascript
 await sock.sendMessage(jid, {
     interactiveMessage: {
-        header: "Hello World",
-        title: "Hello World",
-        footer: "telegram: @yumevtc ",
+        header: "Menu Utama",
+        title: "Pilih opsi:",
+        footer: "Telegram: @depanncapee 🗿",
         buttons: [
             {
                 name: "cta_copy",
                 buttonParamsJson: JSON.stringify({
-                    display_text: "copy code",
-                    id: "123456789",              
-                    copy_code: "ABC123XYZ"
+                    display_text: "📋 Copy Code",
+                    copy_code: "BAILEYS-ROCKS"
                 })
             }
         ]
     }
-}, { quoted: m });
+});
 ```
 
-### Interactive Message with Native Flow
-Send interactive messages with buttons, copy actions, and native flow features:
-
-```javascript
-await sock.sendMessage(jid, {    
-    interactiveMessage: {      
-        header: "Hello World",
-        title: "Hello World",      
-        footer: "telegram: @yumevtc",      
-        image: { url: "https://example.com/image.jpg" },      
-        nativeFlowMessage: {        
-            messageParamsJson: JSON.stringify({          
-                limited_time_offer: {            
-                    text: "idk hummmm?",            
-                    url: "https://t.me/yumevtc",            
-                    copy_code: "yume",            
-                    expiration_time: Date.now() * 999          
-                },          
-                bottom_sheet: {            
-                    in_thread_buttons_limit: 2,            
-                    divider_indices: [1, 2, 3, 4, 5, 999],            
-                    list_title: "yume native",            
-                    button_title: "yume native"          
-                },          
-                tap_target_configuration: {            
-                    title: " X ",            
-                    description: "bomboclard",            
-                    canonical_url: "https://t.me/yumevtc",            
-                    domain: "shop.example.com",            
-                    button_index: 0          
-                }        
-            }),        
-            buttons: [          
-                {            
-                    name: "single_select",            
-                    buttonParamsJson: JSON.stringify({              
-                        has_multiple_buttons: true            
-                    })          
-                },          
-                {            
-                    name: "call_permission_request",            
-                    buttonParamsJson: JSON.stringify({              
-                        has_multiple_buttons: true            
-                    })          
-                },          
-                {            
-                    name: "single_select",            
-                    buttonParamsJson: JSON.stringify({              
-                        title: "Hello World",              
-                        sections: [                
-                            {                  
-                                title: "title",                  
-                                highlight_label: "label",                  
-                                rows: [                    
-                                    {                      
-                                        title: "@yumevtc",                      
-                                        description: "love you",                      
-                                        id: "row_2"                    
-                                    }                  
-                                ]                
-                            }              
-                        ],              
-                        has_multiple_buttons: true            
-                    })          
-                },          
-                {            
-                    name: "cta_copy",            
-                    buttonParamsJson: JSON.stringify({              
-                        display_text: "copy code",              
-                        id: "123456789",              
-                        copy_code: "ABC123XYZ"            
-                    })          
-                }        
-            ]      
-        }    
-    }  
-}, { quoted: m });
-```
-
-### Interactive Message with Thumbnail
-Send interactive messages with thumbnail image and copy button:
-
-```javascript
-await sock.sendMessage(jid, {
-    interactiveMessage: {
-        header: "Hello World",
-        title: "Hello World",
-        footer: "telegram: @yumevtc",
-        image: { url: "https://example.com/image.jpg" },
-        buttons: [
-            {
-                name: "cta_copy",
-                buttonParamsJson: JSON.stringify({
-                    display_text: "copy code",
-                    id: "123456789",
-                    copy_code: "ABC123XYZ"
-                })
-            }
-        ]
-    }
-}, { quoted: m });
-```
-
-### Product Message
-Send product catalog messages with buttons and merchant information:
+5. 🛍️ Product Message
 
 ```javascript
 await sock.sendMessage(jid, {
     productMessage: {
-        title: "Produk Contoh",
-        description: "Ini adalah deskripsi produk",
-        thumbnail: { url: "https://example.com/image.jpg" },
-        productId: "PROD001",
-        retailerId: "RETAIL001",
-        url: "https://example.com/product",
-        body: "Detail produk",
-        footer: "Harga spesial",
-        priceAmount1000: 50000,
-        currencyCode: "USD",
+        title: "WhatsApp Bot Service",
+        description: "Layanan bot WhatsApp custom",
+        thumbnail: { url: "https://example.com/product.jpg" },
+        productId: "BOT-001",
+        priceAmount1000: 500000,
+        currencyCode: "IDR",
         buttons: [
             {
                 name: "cta_url",
                 buttonParamsJson: JSON.stringify({
-                    display_text: "Beli Sekarang",
-                    url: "https://example.com/buy"
+                    display_text: "🛒 Pesan Sekarang",
+                    url: "https://wa.me/628xxx"
                 })
             }
         ]
     }
-}, { quoted: m });
+});
 ```
 
-### Interactive Message with Document Buffer
-Send interactive messages with document from buffer (file system) - **Note: Documents only support buffer**:
+6. 💰 Request Payment Message
 
 ```javascript
-await sock.sendMessage(jid, {
-    interactiveMessage: {
-        header: "Hello World",
-        title: "Hello World",
-        footer: "telegram: @yumevtc",
-        document: fs.readFileSync("./package.json"),
-        mimetype: "application/pdf",
-        fileName: "yumevtc.pdf",
-        jpegThumbnail: fs.readFileSync("./document.jpeg"),
-        contextInfo: {
-            mentionedJid: [jid],
-            forwardingScore: 777,
-            isForwarded: false
-        },
-        externalAdReply: {
-            title: "shenń Bot",
-            body: "anu team",
-            mediaType: 3,
-            thumbnailUrl: "https://example.com/image.jpg",
-            mediaUrl: " X ",
-            sourceUrl: "https://t.me/yumevtc",
-            showAdAttribution: true,
-            renderLargerThumbnail: false         
-        },
-        buttons: [
-            {
-                name: "cta_url",
-                buttonParamsJson: JSON.stringify({
-                    display_text: "Telegram",
-                    url: "https://t.me/yumevtc",
-                    merchant_url: "https://t.me/yumevtc"
-                })
-            }
-        ]
-    }
-}, { quoted: m });
-```
-
-### Interactive Message with Document Buffer (Simple)
-Send interactive messages with document from buffer (file system) without contextInfo and externalAdReply - **Note: Documents only support buffer**:
-
-```javascript
-await sock.sendMessage(jid, {
-    interactiveMessage: {
-        header: "Hello World",
-        title: "Hello World",
-        footer: "telegram: @yumevtc",
-        document: fs.readFileSync("./package.json"),
-        mimetype: "application/pdf",
-        fileName: "yumevtc.pdf",
-        jpegThumbnail: fs.readFileSync("./document.jpeg"),
-        buttons: [
-            {
-                name: "cta_url",
-                buttonParamsJson: JSON.stringify({
-                    display_text: "Telegram",
-                    url: "https://t.me/yumevtc",
-                    merchant_url: "https://t.me/yumevtc"
-                })
-            }
-        ]
-    }
-}, { quoted: m });
-```
-
-### Request Payment Message
-Send payment request messages with custom background and sticker:
-
-```javascript
-let quotedType = m.quoted?.mtype || '';
-let quotedContent = JSON.stringify({ [quotedType]: m.quoted }, null, 2);
-
 await sock.sendMessage(jid, {
     requestPaymentMessage: {
         currency: "IDR",
-        amount: 10000000,
-        from: m.sender,
-        sticker: JSON.parse(quotedContent),
-        background: {
-            id: "100",
-            fileLength: "0",
-            width: 1000,
-            height: 1000,
-            mimetype: "image/webp",
-            placeholderArgb: 0xFF00FFFF,
-            textArgb: 0xFFFFFFFF,     
-            subtextArgb: 0xFFAA00FF   
-        }
+        amount: 100000,
+        from: "628xxx@whatsapp.net",
+        note: "Pembayaran layanan bot"
     }
-}, { quoted: m });
+});
 ```
 
----
+7. 📄 Document dengan Buffer
 
-## Why Choose WhatsApp Baileys?
+```javascript
+const fs = require('fs');
 
-Because this library offers high stability, full features, and an actively improved pairing process. It is ideal for developers aiming to create professional and secure WhatsApp automation solutions. Support for the latest WhatsApp features ensures compatibility with platform updates.
+await sock.sendMessage(jid, {
+    document: fs.readFileSync("./file.pdf"),
+    mimetype: "application/pdf",
+    fileName: "document.pdf",
+    caption: "📄 Document dari depannn"
+});
+```
 
----
+🏗️ Struktur Proyek Contoh
 
-### Technical Notes
+```
+my-baileys-bot/
+├── 📁 node_modules/
+├── 📁 src/
+│   ├── 📄 index.js          # Entry point utama
+│   ├── 📄 handler.js        # Handler pesan
+│   └── 📄 utils.js          # Utilities
+├── 📄 auth_info.json        # Session storage
+├── 📄 package.json
+└── 📄 README.md
+```
 
-- Supports custom pairing codes that are stable and secure
-- Fixes previous issues related to pairing and authentication
-- Features interactive messages and action buttons for dynamic menu creation
-- Automatic and efficient session management for long-term stability
-- Compatible with the latest multi-device features from WhatsApp
-- Easy to integrate and customize based on your needs
-- Perfect for developing bots, customer service automation, and other communication applications
+🔧 Konfigurasi Lanjutan
 
----
+```javascript
+const sock = makeWASocket({
+  auth: state,
+  printQRInTerminal: true,
+  mobile: false, // false untuk desktop mode
+  browser: ["Baileys Bot", "Chrome", "1.0.0"],
+  patchMessageBeforeSending: (message) => {
+    const requires = message;
+    return requires;
+  },
+  getMessage: async (key) => {
+    // Implementasi caching message
+    return {};
+  }
+});
+```
 
-For complete documentation, installation guides, and implementation examples, please visit the official repository and community forums. We continually update and improve this library to meet the needs of developers and users of modern WhatsApp automation solutions.
+🚨 Troubleshooting
 
-**Thank you for choosing WhatsApp Baileys as your WhatsApp automation solution!**
+Masalah Solusi
+QR Code tidak muncul Pastikan tidak ada session aktif di auth_info.json
+Koneksi sering putus Gunakan shouldReconnect logic
+Pesan tidak terkirim Periksa format JID (xxx@whatsapp.net)
+Session expired Hapus auth_info.json dan scan ulang
+
+📈 Contoh Response Handler
+
+```javascript
+sock.ev.on('messages.upsert', async ({ messages }) => {
+  const msg = messages[0];
+  
+  if (msg.message?.conversation?.toLowerCase() === 'ping') {
+    await sock.sendMessage(msg.key.remoteJid, { text: 'Pong! 🏓' });
+  }
+  
+  if (msg.message?.imageMessage) {
+    await sock.sendMessage(msg.key.remoteJid, { 
+      text: 'Gambar diterima! 📸' 
+    });
+  }
+  
+  if (msg.message?.buttonsResponseMessage) {
+    const selected = msg.message.buttonsResponseMessage.selectedButtonId;
+    await sock.sendMessage(msg.key.remoteJid, { 
+      text: `Anda memilih: ${selected} ✅` 
+    });
+  }
+});
+```
+
+🌟 Kenapa Pilih WhatsApp Baileys?
+
+<div align="center">
+
+```javascript
+const reasons = [
+  "⚡ Ringan & Cepat",
+  "🔒 Aman & Stabil",
+  "🔄 Multi-Device Support",
+  "🎨 Fitur Lengkap",
+  "📚 Dokumentasi Detail",
+  "🛠️ Mudah Dikustomisasi",
+  "👨‍💻 Komunitas Aktif",
+  "🗿 Dikembangkan oleh depannn"
+];
+
+console.log(reasons.join('\n'));
+```
+
+</div>
+
+🤝 Kontribusi
+
+1. Fork repository
+2. Buat branch fitur (git checkout -b fitur-keren)
+3. Commit perubahan (git commit -m 'Menambah fitur keren')
+4. Push ke branch (git push origin fitur-keren)
+5. Buat Pull Request
+
+📞 Kontak & Support
+
+· Developer: depannn
+· Telegram: @depanncapee
+· Issues: GitHub Issues
+
+<p align="center">
+  <b>Dibuat dengan ❤️ oleh depannn</b><br>
+  <i>Telegram: @depanncapee 🗿</i>
+</p>
+
+<p align="center">
+  <img src="https://profile-counter.glitch.me/baileys-readme/count.svg" alt="Visitor Count" />
+</p>
+
+<div align="center">
+
+```javascript
+// Special thanks to:
+const contributors = [
+  "WhiskeySockets Team",
+  "All Contributors",
+  "WhatsApp Web Protocol",
+  "You, the awesome user! 🚀"
+];
+```
+
+</div>
+
+⭐ Jangan lupa star repository ini jika membantu!
+🐛 Laporkan bug di GitHub Issues
+💡 Punya ide? Join discussion!
+
+Terakhir diperbarui: $(new Date().toLocaleDateString('id-ID'))
