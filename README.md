@@ -1,8 +1,8 @@
 # Baileys-dep — WhatsApp Bot Framework 2025 Edition
 
-![Baileys depstore Logo](https://files.catbox.moe/7du4br.jpg)
+![Baileys depstore Logo](https://img1.pixhost.to/images/10761/669786493_depstore.jpg)
 
-[![Stars](https://img.shields.io/github/stars/depanSYZ/bail?style=for-the-badge)](https://github.com/depanSYZ/bail)
+[![Stars](https://img.shields.io/github/stars/depanSYZ/bahlil-baileys?style=for-the-badge)](https://github.com/depanSYZ/bahlil-baileys)
 [![Version](https://img.shields.io/npm/v/baileys-depstore?style=for-the-badge)](https://www.npmjs.com/package/baileys-zakzz)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](#license)
 
